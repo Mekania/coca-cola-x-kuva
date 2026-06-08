@@ -48,6 +48,11 @@ function doPost(e) {
     var folder = DriveApp.getFolderById(FOLDER_ID);
     var file = folder.createFile(blob);
 
+    // La hace visible por enlace para poder mostrarla en el muro del evento
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (shareErr) { /* si falla el compartir, igual queda guardada */ }
+
     return json({
       status: "ok",
       message: "Foto guardada correctamente.",
@@ -61,10 +66,54 @@ function doPost(e) {
 }
 
 /**
- * Permite probar que el Web App está vivo abriendo la URL en el navegador.
+ * GET:
+ *   - ?action=list           -> devuelve las fotos de la carpeta (para el muro)
+ *   - ?action=list&callback=fn -> lo mismo pero en formato JSONP (evita CORS)
+ *   - (sin parámetros)       -> chequeo de salud
  */
-function doGet() {
-  return json({ status: "ok", version: "v2", message: "Coca-Cola x Kuva uploader activo." });
+function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) || "";
+  if (action === "list") {
+    return listFiles(e);
+  }
+  return json({ status: "ok", version: "v3", message: "Coca-Cola x Kuva uploader activo." });
+}
+
+/**
+ * Lista las imágenes de la carpeta, más recientes primero.
+ */
+function listFiles(e) {
+  var FOLDER_ID = "17nyJ4aXUR1FIkBlciD8Vn2eCkMFA0wsa";
+  var folder = DriveApp.getFolderById(FOLDER_ID);
+  var it = folder.getFiles();
+  var arr = [];
+
+  while (it.hasNext()) {
+    var f = it.next();
+    if (f.getMimeType().indexOf("image/") !== 0) continue; // solo imágenes
+    var id = f.getId();
+    arr.push({
+      id: id,
+      name: f.getName(),
+      time: f.getDateCreated().getTime(),
+      thumb: "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000",
+      full: "https://lh3.googleusercontent.com/d/" + id + "=w1600",
+      view: "https://drive.google.com/file/d/" + id + "/view"
+    });
+  }
+
+  arr.sort(function (a, b) { return b.time - a.time; }); // más nuevas primero
+
+  var payload = { status: "ok", count: arr.length, files: arr };
+
+  // JSONP si viene callback (lo usa el muro para evitar problemas de CORS)
+  var cb = e && e.parameter && e.parameter.callback;
+  if (cb) {
+    return ContentService
+      .createTextOutput(cb + "(" + JSON.stringify(payload) + ")")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return json(payload);
 }
 
 /** Helper: respuesta JSON */
