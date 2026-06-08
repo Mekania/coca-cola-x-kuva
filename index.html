@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#F40009" />
+  <title>Coca-Cola x Kuva · Sube tu foto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --coke-red: #F40009;
+      --coke-red-dark: #C8000A;
+      --coke-red-deep: #8B0006;
+      --coke-white: #FFFFFF;
+      --coke-cream: #FFF6E9;
+      --gold: #FFD65A;
+      --ink: #1a1a1a;
+      --shadow: 0 18px 40px rgba(0,0,0,.28);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      color: var(--coke-white);
+      background:
+        radial-gradient(circle at 20% 10%, #ff2a32 0%, transparent 45%),
+        radial-gradient(circle at 85% 90%, #ff3b42 0%, transparent 40%),
+        linear-gradient(160deg, var(--coke-red) 0%, var(--coke-red-dark) 55%, var(--coke-red-deep) 100%);
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Burbujas flotantes de fondo */
+    .bubbles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .bubble {
+      position: absolute;
+      bottom: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.05));
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      to { transform: translateY(-115vh) translateX(var(--drift, 0)); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      background: rgba(255,255,255,.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 26px 26px;
+      text-align: center;
+      animation: pop .6s cubic-bezier(.2,.9,.3,1.3) both;
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.96); } }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      font-size: 14px;
+      background: var(--coke-white);
+      color: var(--coke-red);
+      padding: 7px 16px;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.2);
+      margin-bottom: 18px;
+    }
+    .brand .x { color: var(--ink); opacity: .55; font-weight: 700; }
+
+    h1 {
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+    h1 .accent { color: var(--gold); }
+
+    .subtitle { font-size: 14.5px; font-weight: 400; opacity: .92; margin-bottom: 22px; line-height: 1.45; }
+
+    /* Marco tipo álbum panini */
+    .frame {
+      position: relative;
+      border: 3px dashed rgba(255,255,255,.55);
+      border-radius: 18px;
+      padding: 28px 18px;
+      cursor: pointer;
+      transition: .25s ease;
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+    .frame::before {
+      content: "★";
+      position: absolute; top: 8px; left: 12px;
+      color: var(--gold); font-size: 16px; opacity: .8;
+    }
+    .frame::after {
+      content: "★";
+      position: absolute; bottom: 8px; right: 12px;
+      color: var(--gold); font-size: 16px; opacity: .8;
+    }
+    .frame.dragover { border-color: var(--gold); background: rgba(255,214,90,.18); transform: scale(1.02); }
+    .frame:active { transform: scale(.99); }
+
+    .frame .icon { font-size: 46px; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.25)); }
+    .frame .big { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+    .frame .small { font-size: 12.5px; opacity: .8; }
+
+    /* Preview */
+    .preview-wrap { display: none; }
+    .preview-wrap.show { display: block; animation: pop .4s ease both; }
+    .sticker {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 4px solid var(--coke-white);
+      box-shadow: 0 12px 26px rgba(0,0,0,.35);
+      background: #000;
+    }
+    .sticker img { width: 100%; display: block; max-height: 320px; object-fit: cover; }
+    .sticker .badge {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--coke-red); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px; box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    }
+    .filename { font-size: 12.5px; opacity: .85; margin-top: 10px; word-break: break-all; }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: .2s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-primary {
+      margin-top: 16px;
+      background: var(--coke-white);
+      color: var(--coke-red);
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+    }
+    .btn-primary:not(:disabled):active { transform: translateY(2px); }
+    .btn-ghost {
+      margin-top: 10px;
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,.5);
+      font-size: 14px; padding: 12px;
+    }
+
+    /* Barra de progreso */
+    .progress { display: none; margin-top: 16px; }
+    .progress.show { display: block; }
+    .bar { height: 10px; background: rgba(255,255,255,.25); border-radius: 999px; overflow: hidden; }
+    .bar > i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), #fff); transition: width .3s ease; }
+    .progress small { display: block; margin-top: 8px; font-size: 12.5px; opacity: .9; }
+
+    /* Éxito */
+    .success { display: none; text-align: center; }
+    .success.show { display: block; animation: pop .5s ease both; }
+    .check {
+      width: 84px; height: 84px; margin: 0 auto 14px;
+      border-radius: 50%; background: var(--gold); color: var(--coke-red-deep);
+      display: flex; align-items: center; justify-content: center; font-size: 46px; font-weight: 800;
+      box-shadow: 0 12px 26px rgba(0,0,0,.3);
+      animation: bounce .6s cubic-bezier(.2,.9,.3,1.4) both;
+    }
+    @keyframes bounce { 0% { transform: scale(0) rotate(-30deg); } }
+    .success h2 { font-size: 23px; margin-bottom: 6px; }
+    .success p { font-size: 14.5px; opacity: .92; margin-bottom: 18px; }
+
+    .error-msg {
+      display: none; margin-top: 14px; background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.3); border-radius: 12px; padding: 12px;
+      font-size: 13px;
+    }
+    .error-msg.show { display: block; }
+
+    .footer { margin-top: 18px; font-size: 11px; opacity: .65; }
+
+    input[type=file] { display: none; }
+
+    @media (max-width: 380px) {
+      h1 { font-size: 22px; }
+      .card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bubbles" id="bubbles"></div>
+
+  <main class="card">
+    <!-- PASO 1: Subir -->
+    <section id="step-upload">
+      <span class="brand">Coca-Cola <span class="x">×</span> Kuva</span>
+      <h1>¡Tu lámina está <span class="accent">lista!</span> 📸</h1>
+      <p class="subtitle">Sube la foto de tu lámina estilo álbum y nuestro equipo la imprimirá para ti.</p>
+
+      <div class="frame" id="dropzone">
+        <div class="icon">⚽️</div>
+        <div class="big">Toca para subir tu foto</div>
+        <div class="small">o arrástrala aquí · JPG / PNG</div>
+      </div>
+
+      <div class="preview-wrap" id="previewWrap">
+        <div class="sticker">
+          <span class="badge">★ TU LÁMINA</span>
+          <img id="previewImg" alt="Vista previa" />
+        </div>
+        <p class="filename" id="fileName"></p>
+      </div>
+
+      <button class="btn btn-primary" id="sendBtn" disabled>📤 Enviar a impresión</button>
+      <button class="btn btn-ghost" id="changeBtn" style="display:none">Elegir otra foto</button>
+
+      <div class="progress" id="progress">
+        <div class="bar"><i id="barFill"></i></div>
+        <small id="progressText">Subiendo tu lámina…</small>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <input type="file" id="fileInput" accept="image/*" />
+    </section>
+
+    <!-- PASO 2: Éxito -->
+    <section id="step-success" class="success">
+      <div class="check">✓</div>
+      <h2>¡Listo, campeón! 🏆</h2>
+      <p>Tu lámina llegó a nuestro equipo logístico. En unos minutos la tendrás impresa.</p>
+      <button class="btn btn-primary" id="againBtn">Subir otra foto</button>
+    </section>
+
+    <p class="footer">Powered by Kuva · Activación Coca-Cola</p>
+  </main>
+
+  <script>
+    // ============================================================
+    //  CONFIGURACIÓN — pega aquí la URL de tu Apps Script Web App
+    // ============================================================
+    const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbydi_P4E_tQz-SWlr-SS9nKgXiLAMBMc4uXRE7UHrrBvNUfK0uNPVDj1f65_-97RY1HmA/exec";
+
+    const MAX_MB = 20;
+
+    // --- Burbujas decorativas ---
+    (function () {
+      const c = document.getElementById('bubbles');
+      for (let i = 0; i < 16; i++) {
+        const b = document.createElement('span');
+        b.className = 'bubble';
+        const size = 8 + Math.random() * 34;
+        b.style.width = b.style.height = size + 'px';
+        b.style.left = Math.random() * 100 + 'vw';
+        b.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+        b.style.animationDuration = (7 + Math.random() * 9) + 's';
+        b.style.animationDelay = (-Math.random() * 12) + 's';
+        c.appendChild(b);
+      }
+    })();
+
+    // --- Refs ---
+    const fileInput = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+    const previewWrap = document.getElementById('previewWrap');
+    const previewImg = document.getElementById('previewImg');
+    const fileName = document.getElementById('fileName');
+    const sendBtn = document.getElementById('sendBtn');
+    const changeBtn = document.getElementById('changeBtn');
+    const progress = document.getElementById('progress');
+    const barFill = document.getElementById('barFill');
+    const progressText = document.getElementById('progressText');
+    const errorMsg = document.getElementById('errorMsg');
+    const stepUpload = document.getElementById('step-upload');
+    const stepSuccess = document.getElementById('step-success');
+    const againBtn = document.getElementById('againBtn');
+
+    let selectedFile = null;
+
+    // --- Selección de archivo ---
+    dropzone.addEventListener('click', () => fileInput.click());
+    changeBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    ['dragenter', 'dragover'].forEach(ev =>
+      dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(ev =>
+      dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
+    dropzone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+
+    function handleFile(file) {
+      hideError();
+      if (!file) return;
+      if (!file.type.startsWith('image/')) { showError('Por favor sube una imagen (JPG o PNG).'); return; }
+      if (file.size > MAX_MB * 1024 * 1024) { showError('La imagen supera ' + MAX_MB + ' MB. Intenta con una más liviana.'); return; }
+
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewWrap.classList.add('show');
+        dropzone.style.display = 'none';
+        changeBtn.style.display = 'inline-flex';
+        fileName.textContent = file.name;
+        sendBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // --- Envío ---
+    sendBtn.addEventListener('click', uploadFile);
+
+    function uploadFile() {
+      if (!selectedFile) return;
+      if (UPLOAD_URL.includes('PEGA_AQUI')) {
+        showError('Falta configurar la URL de Apps Script en el código (variable UPLOAD_URL).');
+        return;
+      }
+
+      hideError();
+      sendBtn.disabled = true;
+      changeBtn.style.display = 'none';
+      progress.classList.add('show');
+      fakeProgress(0);
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result.split(',')[1]; // quita el prefijo data:
+        const payload = {
+          filename: buildName(selectedFile.name),
+          mimeType: selectedFile.type,
+          data: base64
+        };
+
+        try {
+          const res = await fetch(UPLOAD_URL, {
+            method: 'POST',
+            // text/plain evita el preflight CORS con Apps Script
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          const out = await res.json();
+          if (out.status === 'ok') {
+            barFill.style.width = '100%';
+            progressText.textContent = '¡Subida completa!';
+            setTimeout(showSuccess, 600);
+          } else {
+            throw new Error(out.message || 'Respuesta inesperada del servidor.');
+          }
+        } catch (err) {
+          progress.classList.remove('show');
+          sendBtn.disabled = false;
+          changeBtn.style.display = 'inline-flex';
+          showError('No pudimos subir la foto. Revisa tu conexión e inténtalo de nuevo. (' + err.message + ')');
+        }
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+
+    function buildName(original) {
+      const ext = (original.split('.').pop() || 'jpg').toLowerCase();
+      const d = new Date();
+      const ts = d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0') + '_' +
+        String(d.getHours()).padStart(2, '0') +
+        String(d.getMinutes()).padStart(2, '0') +
+        String(d.getSeconds()).padStart(2, '0');
+      const rand = Math.random().toString(36).slice(2, 6);
+      return 'KUVA_' + ts + '_' + rand + '.' + ext;
+    }
+
+    function fakeProgress(p) {
+      barFill.style.width = p + '%';
+      if (p < 90) setTimeout(() => fakeProgress(p + Math.random() * 18), 250);
+    }
+
+    function showSuccess() {
+      stepUpload.style.display = 'none';
+      stepSuccess.classList.add('show');
+    }
+
+    againBtn.addEventListener('click', () => {
+      selectedFile = null;
+      fileInput.value = '';
+      previewImg.src = '';
+      previewWrap.classList.remove('show');
+      dropzone.style.display = 'block';
+      changeBtn.style.display = 'none';
+      progress.classList.remove('show');
+      barFill.style.width = '0%';
+      progressText.textContent = 'Subiendo tu lámina…';
+      sendBtn.disabled = true;
+      stepSuccess.classList.remove('show');
+      stepUpload.style.display = 'block';
+    });
+
+    function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.add('show'); }
+    function hideError() { errorMsg.classList.remove('show'); }
+  </script>
+</body>
+</html>
