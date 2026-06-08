@@ -64,7 +64,7 @@ function doPost(e) {
  * Permite probar que el Web App está vivo abriendo la URL en el navegador.
  */
 function doGet() {
-  return json({ status: "ok", message: "Coca-Cola x Kuva uploader activo." });
+  return json({ status: "ok", version: "v2", message: "Coca-Cola x Kuva uploader activo." });
 }
 
 /** Helper: respuesta JSON */
