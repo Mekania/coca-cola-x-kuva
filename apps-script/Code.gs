@@ -116,6 +116,25 @@ function listFiles(e) {
   return json(payload);
 }
 
+/**
+ * UTILIDAD (correr UNA sola vez a mano desde el editor):
+ * comparte por enlace todas las fotos que ya estaban en la carpeta
+ * antes de activar el auto-compartir, para que se vean en el muro.
+ *
+ * Cómo usar: selecciona "compartirExistentes" en el menú de funciones
+ * (arriba, al lado de Depurar) y pulsa "Ejecutar".
+ */
+function compartirExistentes() {
+  var FOLDER_ID = "17nyJ4aXUR1FIkBlciD8Vn2eCkMFA0wsa";
+  var it = DriveApp.getFolderById(FOLDER_ID).getFiles();
+  var n = 0;
+  while (it.hasNext()) {
+    var f = it.next();
+    try { f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); n++; } catch (e) {}
+  }
+  Logger.log("Compartidas: " + n);
+}
+
 /** Helper: respuesta JSON */
 function json(obj) {
   return ContentService
