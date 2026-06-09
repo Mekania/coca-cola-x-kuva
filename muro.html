@@ -112,6 +112,8 @@
     .overlay { position: fixed; inset: 0; z-index: 10; background: rgba(40,2,4,.82);
       backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 28px; }
     .overlay.show { display: flex; }
+    /* El lightbox de la foto debe quedar SOBRE la galería */
+    #lightbox { z-index: 30; }
 
     .light-card { width: min(92vw, 600px); max-height: 92dvh; display: flex; flex-direction: column;
       background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
