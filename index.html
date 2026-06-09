@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#F40009" />
-  <title>Coca-Cola x Kuva · Sube tu foto</title>
+  <title>Coca-Cola · Sube tu foto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --coke-red: #F40009;
@@ -72,20 +72,24 @@
     @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.96); } }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      font-size: 14px;
-      background: var(--coke-white);
-      color: var(--coke-red);
-      padding: 7px 16px;
-      border-radius: 999px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.2);
-      margin-bottom: 18px;
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 1;
+      color: var(--coke-white);
+      text-shadow: 0 3px 10px rgba(0,0,0,.3);
+      margin-bottom: 6px;
     }
-    .brand .x { color: var(--ink); opacity: .55; font-weight: 700; }
+    .ribbon {
+      width: 120px; height: 8px; margin: 0 auto 16px;
+      background: var(--coke-white); border-radius: 999px;
+      position: relative; box-shadow: 0 3px 8px rgba(0,0,0,.2);
+    }
+    .ribbon::before, .ribbon::after {
+      content: ""; position: absolute; top: 0; width: 18px; height: 8px; background: var(--coke-white);
+    }
+    .ribbon::before { left: -14px; border-radius: 999px 0 0 999px; transform: skewX(-20deg); }
+    .ribbon::after { right: -14px; border-radius: 0 999px 999px 0; transform: skewX(20deg); }
 
     h1 {
       font-size: 25px;
@@ -217,7 +221,8 @@
   <main class="card">
     <!-- PASO 1: Subir -->
     <section id="step-upload">
-      <span class="brand">Coca-Cola <span class="x">×</span> Kuva</span>
+      <div class="brand">Coca-Cola</div>
+      <div class="ribbon"></div>
       <h1>¡Tu lámina está <span class="accent">lista!</span> 📸</h1>
       <p class="subtitle">Sube la foto de tu lámina estilo álbum y nuestro equipo la imprimirá para ti.</p>
 
@@ -256,7 +261,7 @@
       <button class="btn btn-primary" id="againBtn">Subir otra foto</button>
     </section>
 
-    <p class="footer">Powered by Kuva · Activación Coca-Cola</p>
+    <p class="footer">Destapa la felicidad · Coca-Cola</p>
   </main>
 
   <script>
@@ -391,7 +396,7 @@
         String(d.getMinutes()).padStart(2, '0') +
         String(d.getSeconds()).padStart(2, '0');
       const rand = Math.random().toString(36).slice(2, 6);
-      return 'KUVA_' + ts + '_' + rand + '.' + ext;
+      return 'CocaCola_' + ts + '_' + rand + '.' + ext;
     }
 
     function fakeProgress(p) {
