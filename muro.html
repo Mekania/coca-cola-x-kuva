@@ -3,215 +3,172 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#F40009" />
-  <title>Coca-Cola · Muro del evento</title>
+  <meta name="theme-color" content="#E61A27" />
+  <title>Coca-Cola · Muro de láminas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --coke-red: #F40009;
-      --coke-red-dark: #C8000A;
-      --coke-red-deep: #8B0006;
-      --gold: #FFD65A;
-      --white: #fff;
+      --red: #E61A27;
+      --red-dark: #C20E1A;
+      --red-deep: #8E0C14;
+      --line: rgba(255,255,255,.16);
+      --panel: rgba(0,0,0,.16);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
-      font-family: 'Poppins', system-ui, sans-serif;
-      color: var(--white);
-      background:
-        radial-gradient(circle at 15% 8%, #ff2a32 0%, transparent 42%),
-        radial-gradient(circle at 88% 92%, #ff3b42 0%, transparent 40%),
-        linear-gradient(160deg, var(--coke-red) 0%, var(--coke-red-dark) 55%, var(--coke-red-deep) 100%);
-      height: 100dvh;
-      overflow: hidden;
+      font-family: 'Inter', system-ui, sans-serif; color: #fff;
+      background: radial-gradient(120% 70% at 50% -8%, #F4232F 0%, var(--red) 38%, var(--red-dark) 72%, var(--red-deep) 100%);
+      height: 100dvh; overflow: hidden;
     }
 
-    /* burbujas */
-    .bubbles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-    .bubble { position: absolute; bottom: -80px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.5), rgba(255,255,255,.05));
-      animation: rise linear infinite; }
-    @keyframes rise { to { transform: translateY(-115vh); opacity: 0; } }
-
-    /* ===== Contenedor principal (ocupa exactamente la pantalla) ===== */
     .stage {
-      position: relative; z-index: 1;
       height: 100dvh; width: 100%;
       display: flex; flex-direction: column;
-      padding: clamp(18px, 3vh, 48px) clamp(18px, 3vw, 48px);
-      gap: clamp(14px, 2.2vh, 30px);
+      padding: clamp(22px, 3.4vh, 52px) clamp(22px, 3.2vw, 56px);
+      gap: clamp(16px, 2.4vh, 34px);
     }
 
-    /* ===== Header: marca + QR ===== */
-    .top {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 24px; flex-shrink: 0;
-    }
-    .brand-block { text-align: left; }
-    .wordmark {
-      font-family: 'Dancing Script', cursive; font-weight: 700;
-      font-size: clamp(44px, 7vh, 92px); line-height: 1;
-      text-shadow: 0 4px 14px rgba(0,0,0,.3);
-    }
-    .ribbon { width: clamp(120px,16vh,200px); height: clamp(7px,1vh,11px); margin-top: 8px;
-      background: var(--white); border-radius: 999px; position: relative; }
-    .ribbon::before, .ribbon::after { content:""; position:absolute; top:0; width: 22px; height:100%; background: var(--white); }
-    .ribbon::before { left:-16px; border-radius:999px 0 0 999px; transform: skewX(-20deg); }
-    .ribbon::after { right:-16px; border-radius:0 999px 999px 0; transform: skewX(20deg); }
-    .tagline { margin-top: 16px; font-size: clamp(18px, 2.6vh, 34px); font-weight: 700; }
-    .tagline small { display:block; font-weight: 400; opacity:.9; font-size: clamp(13px,1.7vh,20px); margin-top: 4px; }
+    /* ===== Header ===== */
+    .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; flex-shrink: 0; }
+    .brand-block { padding-top: 6px; }
+    .logo { height: clamp(34px, 5vh, 66px); width: auto; filter: brightness(0) invert(1); display: block; }
+    .eyebrow { font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase;
+      letter-spacing: clamp(3px, .5vw, 6px); font-size: clamp(13px, 1.7vh, 22px);
+      color: rgba(255,255,255,.78); margin-top: clamp(14px, 2vh, 26px); }
+    .eyebrow strong { color: #fff; font-weight: 700; }
 
     .qr-block { text-align: center; flex-shrink: 0; }
-    .qr-card { background: var(--white); padding: clamp(10px,1.4vh,16px); border-radius: 18px;
-      box-shadow: 0 14px 36px rgba(0,0,0,.35); animation: floaty 4s ease-in-out infinite; }
-    .qr-card img { display:block; width: clamp(150px, 20vh, 280px); height: clamp(150px, 20vh, 280px); }
-    @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
-    .qr-block .scan { margin-top: 10px; font-weight: 700; font-size: clamp(14px,1.9vh,22px); }
+    .qr-card { background: #fff; padding: clamp(10px,1.3vh,15px); border-radius: 12px; box-shadow: 0 14px 32px rgba(0,0,0,.3); }
+    .qr-card img { display: block; width: clamp(140px, 19vh, 260px); height: clamp(140px, 19vh, 260px); }
+    .qr-block .scan { font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 2px; font-size: clamp(11px, 1.5vh, 16px); color: rgba(255,255,255,.85); margin-top: 12px; }
 
-    /* ===== Barra contador + título ===== */
-    .bar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-shrink:0; }
-    .bar h2 { font-size: clamp(22px,3vh,40px); font-weight:800; text-shadow:0 2px 8px rgba(0,0,0,.25); }
-    .pill { display:flex; align-items:center; gap:10px; background: rgba(255,255,255,.13);
-      border:1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 8px 18px; font-size: clamp(14px,1.9vh,22px); font-weight:700; }
-    .pill .num { color: var(--gold); }
-    .pill .dot { width:10px; height:10px; border-radius:50%; background:#3ad06a; animation:pulse 1.6s infinite; }
-    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(58,208,106,.6)} 70%{box-shadow:0 0 0 12px rgba(58,208,106,0)} 100%{box-shadow:0 0 0 0 rgba(58,208,106,0)} }
+    /* ===== Barra título + contador ===== */
+    .bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-shrink: 0;
+      border-bottom: 1px solid var(--line); padding-bottom: clamp(10px,1.4vh,18px); }
+    .bar h2 { font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; font-size: clamp(22px, 3.2vh, 46px); }
+    .count { text-align: right; line-height: 1; }
+    .count .n { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(26px, 4vh, 58px); }
+    .count .l { font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 2px; font-size: clamp(10px, 1.3vh, 15px); color: rgba(255,255,255,.7); margin-top: 4px; }
 
-    /* ===== Grid de últimas 8 (llena el espacio restante, sin scroll) ===== */
-    .grid {
-      flex: 1; min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: clamp(10px, 1.6vh, 22px);
-    }
+    /* ===== Grid (últimas 8) ===== */
+    .grid { flex: 1; min-height: 0; display: grid;
+      grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr);
+      gap: clamp(12px, 1.8vh, 26px); justify-items: center; align-items: center; }
     .sticker {
-      position: relative; border-radius: 14px; overflow: hidden;
-      border: clamp(3px,.6vh,6px) solid var(--white); background: rgba(0,0,0,.25);
-      box-shadow: 0 10px 24px rgba(0,0,0,.32); cursor: pointer;
-      animation: drop .6s cubic-bezier(.2,.9,.3,1.3) both;
-      transition: transform .15s ease;
+      position: relative; aspect-ratio: 5 / 7; width: 100%;
+      border-radius: 8px; overflow: hidden; cursor: pointer;
+      border: clamp(3px,.5vh,5px) solid #fff; background: rgba(0,0,0,.22);
+      box-shadow: 0 10px 24px rgba(0,0,0,.30);
+      transition: transform .18s ease;
+      animation: fade .5s ease both;
     }
-    .sticker:active { transform: scale(.97); }
-    .sticker.fresh { border-color: var(--gold); animation: pop-in .9s cubic-bezier(.2,.9,.3,1.4) both; }
-    @keyframes drop { from { opacity:0; transform: translateY(18px) scale(.96); } }
-    @keyframes pop-in { 0%{opacity:0;transform:scale(.4) rotate(-8deg)} 60%{transform:scale(1.05) rotate(2deg)} 100%{transform:scale(1) rotate(0)} }
-    .sticker img { width:100%; height:100%; object-fit: cover; display:block; }
-    .sticker .tag { position:absolute; top:8px; left:8px; background: var(--coke-red); color:#fff;
-      font-size: clamp(9px,1.2vh,13px); font-weight:700; padding:3px 9px; border-radius:999px; box-shadow:0 3px 8px rgba(0,0,0,.3); }
-    .sticker .new-flag { position:absolute; top:8px; right:8px; background: var(--gold); color: var(--coke-red-deep);
-      font-size: clamp(9px,1.2vh,13px); font-weight:800; padding:3px 9px; border-radius:999px; }
+    .grid .sticker { height: 100%; width: auto; max-width: 100%; margin: 0 auto; }
+    @keyframes fade { from { opacity: 0; transform: translateY(14px); } }
+    .sticker:hover { transform: translateY(-3px); }
+    .sticker:active { transform: scale(.98); }
+    .sticker img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .sticker.fresh { border-color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.55), 0 12px 28px rgba(0,0,0,.4); }
+    .sticker .new-flag { position: absolute; top: 0; left: 0; background: #fff; color: var(--red);
+      font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+      font-size: clamp(9px,1.2vh,13px); padding: 4px 10px; border-radius: 0 0 8px 0; }
+
+    .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.85); text-align: center; }
+    .empty .t { font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; font-size: clamp(20px, 3vh, 34px); }
+    .empty p { font-size: clamp(14px, 2vh, 20px); color: rgba(255,255,255,.7); margin-top: 8px; }
 
     /* ===== Botón galería ===== */
-    .footer-bar { flex-shrink:0; display:flex; justify-content:center; }
-    .btn-gallery {
-      border:none; cursor:pointer; font-family:inherit; font-weight:700;
-      font-size: clamp(15px,2vh,24px); color: var(--coke-red); background: var(--white);
-      padding: clamp(12px,1.8vh,20px) clamp(28px,4vw,48px); border-radius: 999px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.3); display:inline-flex; align-items:center; gap:10px;
-      transition: transform .15s ease;
-    }
+    .footer-bar { flex-shrink: 0; display: flex; justify-content: center; }
+    .btn-gallery { border: none; cursor: pointer; background: #fff; color: var(--red);
+      font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+      font-size: clamp(14px, 1.9vh, 22px); padding: clamp(13px,1.8vh,20px) clamp(30px,4.5vw,56px);
+      border-radius: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.28); transition: transform .12s ease; }
     .btn-gallery:active { transform: translateY(2px); }
 
-    .empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:.9; text-align:center; }
-    .empty .big { font-size: clamp(50px,9vh,90px); margin-bottom: 14px; }
-    .empty p { font-size: clamp(16px,2.4vh,28px); }
-
     /* ===== Modales ===== */
-    .overlay {
-      position: fixed; inset: 0; z-index: 10; background: rgba(50,0,2,.78);
-      backdrop-filter: blur(6px); display:none; align-items:center; justify-content:center; padding: 24px;
-    }
-    .overlay.show { display:flex; animation: fade .25s ease both; }
-    @keyframes fade { from{opacity:0} }
+    .overlay { position: fixed; inset: 0; z-index: 10; background: rgba(40,2,4,.82);
+      backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 28px; }
+    .overlay.show { display: flex; }
 
-    /* Lightbox (lámina individual) */
-    .light-card { width: min(92vw, 620px); max-height: 92dvh; display:flex; flex-direction:column;
-      background: var(--white); border-radius: 20px; overflow:hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5);
-      animation: pop .35s cubic-bezier(.2,.9,.3,1.4) both; }
-    @keyframes pop { from{opacity:0; transform:scale(.85)} }
-    .light-card .pic { background:#000; flex:1; min-height:0; display:flex; align-items:center; justify-content:center; }
-    .light-card .pic img { width:100%; height:100%; max-height: 64dvh; object-fit: contain; display:block; }
-    .light-actions { display:flex; gap:12px; padding:16px; background: var(--white); }
-    .light-actions button { flex:1; border:none; cursor:pointer; font-family:inherit; font-weight:700;
-      font-size:17px; padding:15px; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
-    .btn-print { background: var(--coke-red); color:#fff; box-shadow:0 8px 18px rgba(244,0,9,.4); }
+    .light-card { width: min(92vw, 600px); max-height: 92dvh; display: flex; flex-direction: column;
+      background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+    .light-card .pic { background: #111; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+    .light-card .pic img { width: 100%; height: 100%; max-height: 66dvh; object-fit: contain; display: block; }
+    .light-actions { display: flex; gap: 10px; padding: 14px; }
+    .light-actions button { flex: 1; border: none; cursor: pointer; font-family: 'Oswald', sans-serif;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 15px; padding: 15px; border-radius: 9px; }
+    .btn-print { background: var(--red); color: #fff; }
     .btn-print:active { transform: translateY(2px); }
-    .btn-close { background: #eee; color:#333; flex:0 0 auto; padding-left:22px; padding-right:22px; }
+    .btn-close { background: #ececec; color: #333; flex: 0 0 auto; padding-left: 24px; padding-right: 24px; }
+    .btn-delete { background: #fff; color: #b00020; border: 1.5px solid #b00020 !important; flex: 0 0 auto; padding-left: 20px; padding-right: 20px; }
+    .btn-delete[disabled], .btn-print[disabled] { opacity: .5; cursor: not-allowed; }
 
-    /* Galería completa */
-    .gallery-card { width: min(94vw, 980px); max-height: 92dvh; background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.25); border-radius: 20px; display:flex; flex-direction:column; overflow:hidden;
-      animation: pop .35s cubic-bezier(.2,.9,.3,1.4) both; }
-    .gallery-head { display:flex; align-items:center; justify-content:space-between; padding:18px 22px;
-      background: rgba(0,0,0,.25); flex-shrink:0; }
-    .gallery-head h3 { font-size: 22px; font-weight:800; }
-    .gallery-head .close-x { cursor:pointer; background: var(--white); color: var(--coke-red); border:none;
-      width:40px; height:40px; border-radius:50%; font-size:22px; font-weight:800; line-height:1; }
-    .gallery-grid { overflow-y:auto; padding:20px; display:grid; gap:14px;
+    .gallery-card { width: min(94vw, 1000px); max-height: 92dvh; background: var(--panel);
+      border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
+    .gallery-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px;
+      background: rgba(0,0,0,.28); flex-shrink: 0; }
+    .gallery-head h3 { font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 20px; }
+    .gallery-head .close-x { cursor: pointer; background: #fff; color: var(--red); border: none;
+      width: 38px; height: 38px; border-radius: 8px; font-size: 20px; font-weight: 700; line-height: 1; }
+    .gallery-grid { overflow-y: auto; padding: 22px; display: grid; gap: 16px;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-    .gallery-grid .sticker { aspect-ratio: 3/4; animation:none; }
+    .gallery-grid .sticker { aspect-ratio: 5/7; animation: none; }
 
-    .toast { position: fixed; bottom: 28px; left:50%; transform: translateX(-50%) translateY(140px); z-index: 20;
-      background: var(--white); color: var(--coke-red); font-weight:700; font-size: clamp(15px,2vh,20px);
-      padding: 14px 28px; border-radius: 999px; box-shadow:0 14px 30px rgba(0,0,0,.4);
-      transition: transform .45s cubic-bezier(.2,.9,.3,1.4); }
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(140px); z-index: 20;
+      background: #fff; color: var(--red); font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; font-size: clamp(14px, 1.9vh, 19px); padding: 14px 30px; border-radius: 10px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.4); transition: transform .4s cubic-bezier(.2,.8,.3,1.2); }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* Área de impresión: oculta en pantalla, visible solo al imprimir */
-    #print-area { display:none; }
+    /* Impresión: solo la foto, a página completa */
+    #print-area { display: none; }
     @media print {
       body * { visibility: hidden !important; }
       #print-area, #print-area * { visibility: visible !important; }
-      #print-area { display:block !important; position: fixed; inset:0; }
-      #print-area img { width:100%; height:100%; object-fit: contain; }
+      #print-area { display: block !important; position: fixed; inset: 0; }
+      #print-area img { width: 100%; height: 100%; object-fit: contain; }
       @page { margin: 0; }
     }
 
-    /* Pantallas anchas (no verticales): el QR pasa arriba y el grid se ensancha */
+    /* Pantallas horizontales: 4 x 2 */
     @media (min-aspect-ratio: 1/1) {
       .grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
-  <div class="bubbles" id="bubbles"></div>
-
   <div class="stage">
-    <!-- HEADER -->
     <header class="top">
       <div class="brand-block">
-        <div class="wordmark">Coca-Cola</div>
-        <div class="ribbon"></div>
-        <div class="tagline">¡Hazte tu lámina! ⚽️
-          <small>Escanea, sube tu foto y aparece en el muro.</small>
-        </div>
+        <img class="logo" src="logo-cocacola.png" alt="Coca-Cola" />
+        <div class="eyebrow">Álbum coleccionable · <strong>Hazte tu lámina</strong></div>
       </div>
       <div class="qr-block">
         <div class="qr-card"><img id="qr" alt="Escanea para subir tu foto" /></div>
-        <div class="scan">📲 Escanéame</div>
+        <div class="scan">Escanea para participar</div>
       </div>
     </header>
 
-    <!-- BARRA -->
     <div class="bar">
-      <h2>Últimas láminas 🏆</h2>
-      <div class="pill"><span class="dot"></span> <span class="num" id="count">0</span>&nbsp;subidas · en vivo</div>
+      <h2>Últimas láminas</h2>
+      <div class="count"><div class="n" id="count">0</div><div class="l">Láminas registradas</div></div>
     </div>
 
-    <!-- GRID 8 -->
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty" style="display:none">
-      <div class="big">📸</div>
-      <p>Aún no hay fotos.<br>¡Sé el primero en escanear el QR!</p>
+      <div class="t">Aún no hay láminas</div>
+      <p>Escanea el código para subir la primera.</p>
     </div>
 
-    <!-- BOTÓN GALERÍA -->
     <div class="footer-bar">
-      <button class="btn-gallery" id="openGallery">🖼️ Galería completa (<span id="totalBtn">0</span>)</button>
+      <button class="btn-gallery" id="openGallery">Ver galería completa (<span id="totalBtn">0</span>)</button>
     </div>
   </div>
 
@@ -220,8 +177,9 @@
     <div class="light-card">
       <div class="pic"><img id="lightImg" alt="Lámina" /></div>
       <div class="light-actions">
-        <button class="btn-close" id="lightClose">✕ Cerrar</button>
-        <button class="btn-print" id="lightPrint">🖨️ IMPRIMIR</button>
+        <button class="btn-close" id="lightClose">Cerrar</button>
+        <button class="btn-delete" id="lightDelete">Eliminar</button>
+        <button class="btn-print" id="lightPrint">Imprimir</button>
       </div>
     </div>
   </div>
@@ -237,9 +195,8 @@
     </div>
   </div>
 
-  <div class="toast" id="toast">🎉 ¡Nueva lámina subida!</div>
+  <div class="toast" id="toast">Nueva lámina recibida</div>
 
-  <!-- Se rellena al imprimir -->
   <div id="print-area"><img id="printImg" alt="" /></div>
 
   <script>
@@ -248,28 +205,12 @@
     // ============================================================
     const LANDING_URL = "https://coca-cola-x-kuva.vercel.app";
     const API_URL = "https://script.google.com/macros/s/AKfycbydi_P4E_tQz-SWlr-SS9nKgXiLAMBMc4uXRE7UHrrBvNUfK0uNPVDj1f65_-97RY1HmA/exec";
-    const REFRESH_SECONDS = 5;
-    const SHOWN = 8; // cuántas se muestran en el muro principal
+    const REFRESH_SECONDS = 6;
+    const SHOWN = 8;
 
-    // QR
     document.getElementById('qr').src =
-      "https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=" + encodeURIComponent(LANDING_URL);
+      "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=" + encodeURIComponent(LANDING_URL);
 
-    // Burbujas
-    (function () {
-      const c = document.getElementById('bubbles');
-      for (let i = 0; i < 14; i++) {
-        const b = document.createElement('span'); b.className = 'bubble';
-        const s = 8 + Math.random() * 30;
-        b.style.width = b.style.height = s + 'px';
-        b.style.left = Math.random() * 100 + 'vw';
-        b.style.animationDuration = (8 + Math.random() * 8) + 's';
-        b.style.animationDelay = (-Math.random() * 12) + 's';
-        c.appendChild(b);
-      }
-    })();
-
-    // Refs
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
     const countEl = document.getElementById('count');
@@ -282,19 +223,17 @@
     const galleryGrid = document.getElementById('galleryGrid');
     const galleryCount = document.getElementById('galleryCount');
 
-    let allFiles = [];          // metadatos de todas las fotos (ligero)
+    let allFiles = [];
     let knownIds = new Set();
     let firstLoad = true;
     let seq = 0;
 
-    // ---- Polling JSONP ----
+    // ---- Polling JSONP (ligero: solo metadatos) ----
     function poll() {
       const cbName = '__cb_' + (seq++);
-      window[cbName] = function (data) {
-        try { onData(data); } finally { cleanup(); }
-      };
       const s = document.createElement('script');
       function cleanup(){ delete window[cbName]; if (s.parentNode) s.parentNode.removeChild(s); }
+      window[cbName] = function (data) { try { onData(data); } finally { cleanup(); } };
       s.onerror = cleanup;
       s.src = API_URL + '?action=list&callback=' + cbName + '&t=' + Date.now();
       document.body.appendChild(s);
@@ -303,61 +242,82 @@
     function onData(data) {
       if (!data || data.status !== 'ok') return;
       allFiles = data.files || [];
-      const total = allFiles.length;
-
-      countEl.textContent = total;
-      totalBtn.textContent = total;
-
-      // detectar nuevas
-      const incoming = new Set(allFiles.map(f => f.id));
       let newCount = 0;
       if (!firstLoad) allFiles.forEach(f => { if (!knownIds.has(f.id)) newCount++; });
+      paint(!firstLoad);
+      if (newCount > 0) showToast(newCount);
+      knownIds = new Set(allFiles.map(f => f.id));
+      firstLoad = false;
+    }
 
-      // muro principal: solo las últimas SHOWN
+    function paint(markNew) {
+      const total = allFiles.length;
+      countEl.textContent = String(total).padStart(2, '0');
+      totalBtn.textContent = total;
       const top = allFiles.slice(0, SHOWN);
       empty.style.display = total ? 'none' : 'flex';
       grid.style.display = total ? 'grid' : 'none';
       grid.innerHTML = '';
-      top.forEach(f => grid.appendChild(makeSticker(f, !firstLoad && !knownIds.has(f.id))));
-
-      // si la galería está abierta, refrescarla también
+      top.forEach(f => grid.appendChild(makeSticker(f, markNew && !knownIds.has(f.id))));
       if (gallery.classList.contains('show')) renderGallery();
-
-      if (newCount > 0) showToast(newCount);
-      knownIds = incoming;
-      firstLoad = false;
     }
 
     function makeSticker(f, isNew) {
       const card = document.createElement('div');
       card.className = 'sticker' + (isNew ? ' fresh' : '');
       card.innerHTML =
-        '<span class="tag">★ COCA-COLA</span>' +
-        (isNew ? '<span class="new-flag">NUEVA</span>' : '') +
+        (isNew ? '<span class="new-flag">Nueva</span>' : '') +
         '<img loading="lazy" src="' + f.thumb + '" onerror="this.onerror=null;this.src=\'' + f.full + '\'" alt="Lámina">';
       card.addEventListener('click', () => openLight(f));
       return card;
     }
 
-    // ---- Lightbox + impresión ----
+    // ---- Lightbox: imprimir + eliminar ----
+    let currentFile = null;
+    const lightDelete = document.getElementById('lightDelete');
+    const lightPrint = document.getElementById('lightPrint');
+
     function openLight(f) {
-      lightImg.src = f.full;
-      printImg.src = f.full;
+      currentFile = f;
+      lightImg.src = f.full; printImg.src = f.full;
+      lightDelete.disabled = false; lightPrint.disabled = false;
       lightbox.classList.add('show');
     }
     document.getElementById('lightClose').addEventListener('click', () => lightbox.classList.remove('show'));
     lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('show'); });
-    document.getElementById('lightPrint').addEventListener('click', () => {
-      // espera a que la imagen de impresión esté lista, luego imprime
+    lightPrint.addEventListener('click', () => {
       if (printImg.complete) window.print();
       else printImg.onload = () => window.print();
     });
 
-    // ---- Galería completa (carga todas las imágenes solo al abrir) ----
-    document.getElementById('openGallery').addEventListener('click', () => {
-      renderGallery();
-      gallery.classList.add('show');
+    lightDelete.addEventListener('click', async () => {
+      if (!currentFile) return;
+      if (!confirm('¿Eliminar esta lámina? Se enviará a la papelera de Drive.')) return;
+      const f = currentFile;
+      lightDelete.disabled = true; lightPrint.disabled = true;
+      lightDelete.textContent = 'Eliminando…';
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'delete', id: f.id })
+        });
+        const out = await res.json();
+        if (out.status !== 'ok') throw new Error(out.message || 'Error al eliminar');
+        allFiles = allFiles.filter(x => x.id !== f.id);
+        knownIds.delete(f.id);
+        paint();
+        lightbox.classList.remove('show');
+        showMessage('Lámina eliminada');
+      } catch (err) {
+        alert('No se pudo eliminar: ' + err.message);
+        lightDelete.disabled = false; lightPrint.disabled = false;
+      } finally {
+        lightDelete.textContent = 'Eliminar';
+      }
     });
+
+    // ---- Galería completa (carga imágenes solo al abrir) ----
+    document.getElementById('openGallery').addEventListener('click', () => { renderGallery(); gallery.classList.add('show'); });
     document.getElementById('galleryClose').addEventListener('click', () => gallery.classList.remove('show'));
     gallery.addEventListener('click', e => { if (e.target === gallery) gallery.classList.remove('show'); });
 
@@ -369,14 +329,15 @@
 
     // ---- Toast ----
     let toastTimer = null;
-    function showToast(n) {
-      toast.textContent = n === 1 ? '🎉 ¡Nueva lámina subida!' : '🎉 ¡' + n + ' láminas nuevas!';
-      toast.classList.add('show');
+    function showMessage(text) {
+      toast.textContent = text; toast.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
+    function showToast(n) {
+      showMessage(n === 1 ? 'Nueva lámina recibida' : n + ' láminas nuevas recibidas');
+    }
 
-    // arranque
     poll();
     setInterval(poll, REFRESH_SECONDS * 1000);
   </script>

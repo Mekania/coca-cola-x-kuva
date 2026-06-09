@@ -33,6 +33,13 @@ function doPost(e) {
   try {
     var body = JSON.parse(e.postData.contents);
 
+    // --- Eliminar una lámina (enviar a la papelera) ---
+    if (body.action === "delete") {
+      if (!body.id) return json({ status: "error", message: "Falta el id del archivo." });
+      DriveApp.getFileById(body.id).setTrashed(true);
+      return json({ status: "ok", message: "Lámina eliminada." });
+    }
+
     if (!body.data) {
       return json({ status: "error", message: "No se recibió ninguna imagen." });
     }
@@ -76,7 +83,7 @@ function doGet(e) {
   if (action === "list") {
     return listFiles(e);
   }
-  return json({ status: "ok", version: "v3", message: "Coca-Cola x Kuva uploader activo." });
+  return json({ status: "ok", version: "v4", message: "Coca-Cola uploader activo." });
 }
 
 /**
