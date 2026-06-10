@@ -20,7 +20,7 @@
     html, body { height: 100%; }
     body {
       font-family: 'Inter', system-ui, sans-serif; color: #fff;
-      background: radial-gradient(120% 70% at 50% -8%, #F4232F 0%, var(--red) 38%, var(--red-dark) 72%, var(--red-deep) 100%);
+      background: var(--red);
       height: 100dvh; overflow: hidden;
     }
 
@@ -32,17 +32,6 @@
       gap: clamp(16px, 2.4vh, 34px);
     }
 
-    /* Burbujas sutiles (la chispa Coca-Cola, sin perder sobriedad) */
-    .bubbles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-    .bubble { position: absolute; bottom: -12vh; border-radius: 50%;
-      background: radial-gradient(circle at 32% 30%, rgba(255,255,255,.40), rgba(255,255,255,.05));
-      opacity: 0; animation: rise linear infinite; }
-    @keyframes rise {
-      0% { opacity: 0; transform: translateY(0) translateX(0); }
-      12% { opacity: .45; }
-      88% { opacity: .45; }
-      100% { opacity: 0; transform: translateY(-120vh) translateX(var(--dx, 0)); }
-    }
 
     /* ===== Header ===== */
     .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; flex-shrink: 0; }
@@ -164,17 +153,15 @@
   </style>
 </head>
 <body>
-  <div class="bubbles" id="bubbles"></div>
-
   <div class="stage">
     <header class="top">
       <div class="brand-block">
         <img class="logo" src="logo-cocacola.png" alt="Coca-Cola" />
-        <div class="eyebrow">Álbum coleccionable · <strong>Hazte tu lámina</strong></div>
+        <div class="eyebrow"><strong>¡Tu lámina está casi lista!</strong></div>
       </div>
       <div class="qr-block">
         <div class="qr-card"><img id="qr" alt="Escanea para subir tu foto" /></div>
-        <div class="scan">Escanea para participar</div>
+        <div class="scan">Escanea el código para imprimir tu lámina</div>
       </div>
     </header>
 
@@ -227,23 +214,8 @@
     // ============================================================
     const LANDING_URL = "https://coca-cola-x-kuva.vercel.app";
     const API_URL = "https://script.google.com/macros/s/AKfycbydi_P4E_tQz-SWlr-SS9nKgXiLAMBMc4uXRE7UHrrBvNUfK0uNPVDj1f65_-97RY1HmA/exec";
-    const REFRESH_SECONDS = 6;
+    const REFRESH_SECONDS = 8;
     const SHOWN = 4;
-
-    // Burbujas sutiles (pocas y lentas: ligeras para el tótem)
-    (function () {
-      const c = document.getElementById('bubbles');
-      for (let i = 0; i < 12; i++) {
-        const b = document.createElement('span'); b.className = 'bubble';
-        const s = 10 + Math.random() * 36;
-        b.style.width = b.style.height = s + 'px';
-        b.style.left = Math.random() * 100 + 'vw';
-        b.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
-        b.style.animationDuration = (11 + Math.random() * 10) + 's';
-        b.style.animationDelay = (-Math.random() * 18) + 's';
-        c.appendChild(b);
-      }
-    })();
 
     document.getElementById('qr').src =
       "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=" + encodeURIComponent(LANDING_URL);
@@ -264,6 +236,7 @@
     let knownIds = new Set();
     let firstLoad = true;
     let seq = 0;
+    let lastSig = null;
 
     // ---- Polling JSONP (ligero: solo metadatos) ----
     function poll() {
@@ -278,12 +251,19 @@
 
     function onData(data) {
       if (!data || data.status !== 'ok') return;
-      allFiles = data.files || [];
+      const files = data.files || [];
+      const sig = files.map(f => f.id).join(',');
+
+      // si la lista no cambió, no repintamos (evita parpadeo y recargas)
+      if (sig === lastSig && !firstLoad) return;
+
+      allFiles = files;
       let newCount = 0;
       if (!firstLoad) allFiles.forEach(f => { if (!knownIds.has(f.id)) newCount++; });
       paint(!firstLoad);
       if (newCount > 0) showToast(newCount);
       knownIds = new Set(allFiles.map(f => f.id));
+      lastSig = sig;
       firstLoad = false;
     }
 
